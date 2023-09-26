@@ -13,6 +13,9 @@ interface PokedexDao {
     fun getPokemonList(): Flow<List<PokemonInformation>>
     @Query("SELECT * FROM PokemonInformation WHERE name=(:name)")
     suspend fun getPokemon(name:String):PokemonInformation?
+
+    @Query("SELECT * FROM PokemonInformation WHERE id = :id")
+    suspend fun getPokemonId(id: Int): PokemonInformation?
     @Update
     suspend fun updatePokemon(pokemonInformation: PokemonInformation)
 

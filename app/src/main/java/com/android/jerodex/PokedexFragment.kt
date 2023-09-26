@@ -1,5 +1,6 @@
 package com.android.jerodex
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,11 +11,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.jerodex.database.PokemonInformation
 import com.android.jerodex.databinding.FragmentPokedexBinding
 import kotlinx.coroutines.launch
+
 
 private const val TAG = "PokedexFragment"
 
@@ -27,18 +29,11 @@ class PokedexFragment : Fragment() {
         }
     private val pokedexViewModel: PokedexViewModel by viewModels()
 
-
-    //SIRVE?
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_pokedex, container, false)
-
-        // Set the background color programmatically
-        view.setBackgroundColor(resources.getColor(R.color.purple))
-
         _binding =
             FragmentPokedexBinding.inflate(inflater, container, false)
         binding.pokedexGrid.layoutManager = GridLayoutManager(context, 2)
@@ -53,7 +48,9 @@ class PokedexFragment : Fragment() {
         val layoutManager = GridLayoutManager(requireContext(), 2)
         recyclerView.layoutManager = layoutManager
 
-        val adapter = PokedexListAdapter(emptyList())
+        val adapter = PokedexListAdapter(emptyList()) { pokemonInformation ->
+            findNavController().navigate(PokedexFragmentDirections.showPokemon(pokemonInformation.name))
+        }
         recyclerView.adapter = adapter
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -71,14 +68,24 @@ class PokedexFragment : Fragment() {
                 super.onScrolled(recyclerView, dx, dy)
                 val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
                 val totalItemCount = layoutManager.itemCount
-                val threshold = 6
+                val threshold = 9
                 if (lastVisibleItemPosition + threshold >= totalItemCount) {
                     pokedexViewModel.viewModelScope.launch {
-                        pokedexViewModel.loadMoreData(totalItemCount, 20, true)
+                        pokedexViewModel.loadMoreData(totalItemCount, 9, true)
                     }
                 }
             }
         })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+    }
+
+    override fun onPause() {
+        super.onPause()
+        requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
 
     override fun onDestroy() {

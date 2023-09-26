@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Jerodex</string>
+    <string name="next_button">NEXT</string>
+    <string name="previous_button">PREVIOUS</string>
 </resources>

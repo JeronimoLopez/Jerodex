@@ -21,13 +21,21 @@ private const val TAG = "PokedexListAdapter"
 class PokemonViewHolder(
     private val binding: ListItemPokedexBinding
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(pokemonInformation: PokemonInformation) {
+    fun bind(
+        pokemonInformation: PokemonInformation,
+        onPokemonClicked: (PokemonInformation) -> Unit
+    ) {
         binding.pokedexImageView.load(pokemonInformation.sprites)
+        binding.root.setOnClickListener {
+            onPokemonClicked(pokemonInformation)
+        }
+
     }
 }
 
 class PokedexListAdapter(
-    private var pokemonInformation: List<PokemonInformation>
+    private var pokemonInformation: List<PokemonInformation>,
+    private val onPokemonClicked: (PokemonInformation) -> Unit
 ) : RecyclerView.Adapter<PokemonViewHolder>() {
 
     private val displayedItems: MutableList<PokemonInformation> = mutableListOf()
@@ -45,7 +53,8 @@ class PokedexListAdapter(
         val item = pokemonInformation[position]
         if (!displayedItems.contains(item)) {
             Log.d(TAG, "${item.name} is being updated")
-            holder.bind(item)
+            holder.bind(item, onPokemonClicked)
+
             val imageView = holder.itemView.findViewById<ImageView>(R.id.pokedex_image_view)
 
             Glide.with(holder.itemView.context)
@@ -69,8 +78,6 @@ class PokedexListAdapter(
                                     .toFloat()
                             imageView.background = gradientDrawable
                         }
-                        Palette.from(resource).generate { palette ->
-                            val dominantColor = palette?.dominantSwatch?.rgb ?: Color.WHITE}
                     }
                 })
             displayedItems.add(item)

@@ -10,20 +10,21 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
-
-private const val TAG = "ViewModel"
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class PokedexViewModel : ViewModel() {
 
-    private val pokemonRepository = PokemonRepository.get() // Database calls
+    private val pokemonRepository = PokemonRepository.get()
 
     private val _pokemon: MutableStateFlow<List<PokemonInformation>> = MutableStateFlow(emptyList())
     val pokemon: StateFlow<List<PokemonInformation>>
         get() = _pokemon.asStateFlow()
 
-    private val pokedexRepository = PokedexRepository() // Api calls
+    private val pokedexRepository = PokedexRepository()
     private val displayedItems: MutableList<PokemonInformation> = mutableListOf()
-    private var isRequestInProgress: Boolean = false
+    private val requestMutex = Mutex()
+    private var isRequestInProgress = false
 
     init {
         viewModelScope.launch {
@@ -42,9 +43,50 @@ class PokedexViewModel : ViewModel() {
     }
 
     suspend fun loadMoreData(offset: Int, limit: Int, boolean: Boolean) {
+        // Use a mutex to ensure proper synchronization
+        requestMutex.withLock {
+            if (!isRequestInProgress || boolean) {
+                isRequestInProgress = true
+                try {
+                    val pokedexList = pokedexRepository.getPokedexList(offset, limit).results
+                    for (item in pokedexList) {
+                        if (pokemonRepository.getPokemon(item.name)?.name == null) {
+                            val detailsResponse = pokedexRepository.getPokemonByUrl(item.url)
+                            val details = PokemonInformation(
+                                name = item.name,
+                                id = detailsResponse.id,
+                                sprites = detailsResponse.sprites.frontDefault,
+                                types = detailsResponse.types.map { it.type.name },
+                                url = item.url
+                            )
+                            // Move this outside of the synchronized block
+                            pokemonRepository.addPokedex(details)
+                        }
+                    }
 
+                } catch (e: Exception) {
+                    Log.e("ErrorTag", "Exception retrofit", e)
+                } finally {
+                    val updatedData: List<PokemonInformation> =
+                        pokemonRepository.getPokemonList().first()
+                    _pokemon.value = updatedData
+                    isRequestInProgress = false
+                }
+            }
+        }
+    }
+
+    fun getDisplayedItems(): List<PokemonInformation> {
+        return displayedItems
+    }
+    fun updateDisplayedItems(newItems: List<PokemonInformation>) {
+        displayedItems.addAll(newItems)
+    }
+}
+
+/*
+suspend fun loadMoreData(offset: Int, limit: Int, boolean: Boolean) {
         if (!isRequestInProgress || boolean) {
-
             isRequestInProgress = true
             try {
                 val pokedexList = pokedexRepository.getPokedexList(offset, limit).results
@@ -56,10 +98,8 @@ class PokedexViewModel : ViewModel() {
                             id = detailsResponse.id,
                             sprites = detailsResponse.sprites.frontDefault,
                             types = detailsResponse.types.map { it.type.name },
-                            url = item.url
-                        )
+                            url = item.url )
                         pokemonRepository.addPokedex(details)
-
                     }
                 }
                 val updatedData: List<PokemonInformation> =
@@ -73,11 +113,4 @@ class PokedexViewModel : ViewModel() {
             }
         }
     }
-
-    fun getDisplayedItems(): List<PokemonInformation> {
-        return displayedItems
-    }
-    fun updateDisplayedItems(newItems: List<PokemonInformation>) {
-        displayedItems.addAll(newItems)
-    }
-}
+ */

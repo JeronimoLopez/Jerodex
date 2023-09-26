@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.room.Room
 import com.android.jerodex.database.PokedexDatabase
 import com.android.jerodex.database.PokemonInformation
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 
 private const val TAG = "PokemonRepository"
@@ -22,8 +21,10 @@ class PokemonRepository private constructor(context: Context) {
 
     suspend fun addPokedex(pokemonInformation: PokemonInformation) {
         val checkPokemon:String? = database.pokedexDao().getPokemon(pokemonInformation.name)?.name
-        if(checkPokemon != pokemonInformation.name)
+        //checkPokemon is the value in the database
+        if(checkPokemon != pokemonInformation.name && checkPokemon.isNullOrEmpty())
         {
+            Log.d(TAG, "Added ${pokemonInformation.name} to the Pokedex")
             database.pokedexDao().addPokedex(pokemonInformation)
         } else{
             Log.d(TAG, "Pokemon already exists in database")
@@ -32,6 +33,10 @@ class PokemonRepository private constructor(context: Context) {
 
     suspend fun getPokemon(name:String):PokemonInformation? {
         return  database.pokedexDao().getPokemon(name)
+    }
+
+    suspend fun getPokemonId(id: Int): PokemonInformation?{
+        return database.pokedexDao().getPokemonId(id)
     }
 
     suspend fun updatePokemon(pokemonInformation: PokemonInformation) = database.pokedexDao().updatePokemon(pokemonInformation)

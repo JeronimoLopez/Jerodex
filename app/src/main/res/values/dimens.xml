@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="rounded_corner_radius">16dp</dimen>
+    <dimen name="stroke_width">2dp</dimen>
+    <dimen name="button_height">48dp</dimen>
+    <dimen name="button_width">130dp</dimen>
+    <dimen name="type_height">48dp</dimen>
+    <dimen name="type_width">103dp</dimen>
+    <dimen name="sprite_height">100dp</dimen>
+    <dimen name="sprite_width">230dp</dimen>
+</resources>
