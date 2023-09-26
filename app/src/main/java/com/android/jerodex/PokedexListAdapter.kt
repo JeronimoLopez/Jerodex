@@ -38,7 +38,6 @@ class PokedexListAdapter(
     private val onPokemonClicked: (PokemonInformation) -> Unit
 ) : RecyclerView.Adapter<PokemonViewHolder>() {
 
-    private val displayedItems: MutableList<PokemonInformation> = mutableListOf()
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -51,43 +50,40 @@ class PokedexListAdapter(
 
     override fun onBindViewHolder(holder: PokemonViewHolder, position: Int) {
         val item = pokemonInformation[position]
-        if (!displayedItems.contains(item)) {
-            Log.d(TAG, "${item.name} is being updated")
-            holder.bind(item, onPokemonClicked)
 
-            val imageView = holder.itemView.findViewById<ImageView>(R.id.pokedex_image_view)
+        Log.d(TAG, "${item.name} is being updated")
+        holder.bind(item, onPokemonClicked)
 
-            Glide.with(holder.itemView.context)
-                .asBitmap()
-                .load(item.sprites)
-                .into(object : SimpleTarget<Bitmap>() {
-                    override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap>?
-                    ) {
-                        Palette.from(resource).generate { palette ->
-                            val dominantColor = palette?.dominantSwatch?.rgb ?: Color.WHITE
-                            val gradientDrawable = GradientDrawable()
-                            gradientDrawable.orientation = GradientDrawable.Orientation.TOP_BOTTOM
-                            gradientDrawable.colors = intArrayOf(
-                                dominantColor,
-                                Color.WHITE
-                            )
-                            gradientDrawable.cornerRadius =
-                                holder.itemView.context.resources.getDimensionPixelSize(R.dimen.rounded_corner_radius)
-                                    .toFloat()
-                            imageView.background = gradientDrawable
-                        }
+        val imageView = holder.itemView.findViewById<ImageView>(R.id.pokedex_image_view)
+
+        Glide.with(holder.itemView.context)
+            .asBitmap()
+            .load(item.sprites)
+            .into(object : SimpleTarget<Bitmap>() {
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: Transition<in Bitmap>?
+                ) {
+                    Palette.from(resource).generate { palette ->
+                        val dominantColor = palette?.dominantSwatch?.rgb ?: Color.WHITE
+                        val gradientDrawable = GradientDrawable()
+                        gradientDrawable.orientation = GradientDrawable.Orientation.TOP_BOTTOM
+                        gradientDrawable.colors = intArrayOf(
+                            dominantColor,
+                            Color.WHITE
+                        )
+                        gradientDrawable.cornerRadius =
+                            holder.itemView.context.resources.getDimensionPixelSize(R.dimen.rounded_corner_radius)
+                                .toFloat()
+                        imageView.background = gradientDrawable
                     }
-                })
-            displayedItems.add(item)
-        }
+                }
+            })
     }
 
     override fun getItemCount(): Int = pokemonInformation.size
 
     fun updateData(newData: List<PokemonInformation>) {
-        displayedItems.clear()
         pokemonInformation = newData
         notifyDataSetChanged()
     }

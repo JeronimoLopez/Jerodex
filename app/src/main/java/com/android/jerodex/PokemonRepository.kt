@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.room.Room
 import com.android.jerodex.database.PokedexDatabase
 import com.android.jerodex.database.PokemonInformation
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 
 private const val TAG = "PokemonRepository"
