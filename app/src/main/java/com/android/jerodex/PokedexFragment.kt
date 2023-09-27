@@ -2,7 +2,6 @@ package com.android.jerodex
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -74,7 +73,6 @@ class PokedexFragment : Fragment() {
 
                 if (!isLoadingMoreData && lastVisibleItemPosition + threshold >= totalItemCount) {
                     isLoadingMoreData = true
-                    Log.d(TAG, "Request in progress")
 
                     pokedexViewModel.viewModelScope.launch {
                         pokedexViewModel.loadMoreData(totalItemCount, 9, true)
