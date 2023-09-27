@@ -2,6 +2,7 @@ package com.android.jerodex
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,15 +64,21 @@ class PokedexFragment : Fragment() {
                 }
             }
         }
+        var isLoadingMoreData = false
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
                 val totalItemCount = layoutManager.itemCount
                 val threshold = 9
-                if (lastVisibleItemPosition + threshold >= totalItemCount) {
+
+                if (!isLoadingMoreData && lastVisibleItemPosition + threshold >= totalItemCount) {
+                    isLoadingMoreData = true
+                    Log.d(TAG, "Request in progress")
+
                     pokedexViewModel.viewModelScope.launch {
                         pokedexViewModel.loadMoreData(totalItemCount, 9, true)
+                        isLoadingMoreData = false
                     }
                 }
             }

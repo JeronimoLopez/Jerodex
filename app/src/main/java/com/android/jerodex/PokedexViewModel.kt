@@ -43,7 +43,7 @@ class PokedexViewModel : ViewModel() {
     }
 
     suspend fun loadMoreData(offset: Int, limit: Int, boolean: Boolean) {
-        // Use a mutex to ensure proper synchronization
+        //TODO Add max list count
         requestMutex.withLock {
             if (!isRequestInProgress || boolean) {
                 isRequestInProgress = true
@@ -59,7 +59,6 @@ class PokedexViewModel : ViewModel() {
                                 types = detailsResponse.types.map { it.type.name },
                                 url = item.url
                             )
-                            // Move this outside of the synchronized block
                             pokemonRepository.addPokedex(details)
                         }
                     }
