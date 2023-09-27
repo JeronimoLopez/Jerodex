@@ -28,10 +28,10 @@
         android:text="@string/next_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.914"
+        app:layout_constraintHorizontal_bias="0.926"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.933" />
+        app:layout_constraintVertical_bias="0.928" />
 
     <Button
         android:id="@+id/previousButton"
@@ -48,14 +48,14 @@
 
     <ImageView
         android:id="@+id/pokemonSprite"
-        android:layout_width="@dimen/sprite_width"
-        android:layout_height="@dimen/sprite_height"
+        android:layout_width="224dp"
+        android:layout_height="114dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.152"
+        app:layout_constraintHorizontal_bias="0.169"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.43"/>
+        app:layout_constraintVertical_bias="0.419" />
 
     <ImageView
         android:id="@+id/pokemonType1"

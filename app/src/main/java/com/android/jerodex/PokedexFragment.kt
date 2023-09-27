@@ -69,13 +69,13 @@ class PokedexFragment : Fragment() {
                 super.onScrolled(recyclerView, dx, dy)
                 val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
                 val totalItemCount = layoutManager.itemCount
-                val threshold = 9
+                val threshold = 6
 
                 if (!isLoadingMoreData && lastVisibleItemPosition + threshold >= totalItemCount) {
                     isLoadingMoreData = true
 
                     pokedexViewModel.viewModelScope.launch {
-                        pokedexViewModel.loadMoreData(totalItemCount, 9, true)
+                        pokedexViewModel.loadMoreData(totalItemCount, 15, true)
                         isLoadingMoreData = false
                     }
                 }

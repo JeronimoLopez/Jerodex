@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/pokedex_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,25 +17,26 @@
         app:layout_constraintHorizontal_bias="0.158"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.93" />
+        app:layout_constraintVertical_bias="0.93"
+        />
 
     <Button
         android:id="@+id/nextButton"
-        android:layout_width="@dimen/button_width"
-        android:layout_height="@dimen/button_height"
-        android:text="@string/next_button"
+        android:layout_width="132dp"
+        android:layout_height="58dp"
         android:backgroundTint="@android:color/darker_gray"
+        android:text="@string/next_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.914"
+        app:layout_constraintHorizontal_bias="0.926"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.933" />
+        app:layout_constraintVertical_bias="0.928" />
 
     <Button
         android:id="@+id/previousButton"
-        android:layout_width="@dimen/button_width"
-        android:layout_height="@dimen/button_height"
+        android:layout_width="144dp"
+        android:layout_height="58dp"
         android:backgroundTint="@android:color/darker_gray"
         android:text="@string/previous_button"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -46,14 +48,14 @@
 
     <ImageView
         android:id="@+id/pokemonSprite"
-        android:layout_width="@dimen/sprite_width"
-        android:layout_height="@dimen/sprite_height"
+        android:layout_width="224dp"
+        android:layout_height="114dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.152"
+        app:layout_constraintHorizontal_bias="0.169"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.43"/>
+        app:layout_constraintVertical_bias="0.419" />
 
     <ImageView
         android:id="@+id/pokemonType1"
@@ -76,5 +78,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.399"/>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
